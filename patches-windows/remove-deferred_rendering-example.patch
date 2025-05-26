@@ -1,0 +1,22 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index caea7347b..ecf64d5bf 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -1080,17 +1080,6 @@ description = "Decal rendering"
+ category = "3D Rendering"
+ wasm = true
+ 
+-[[example]]
+-name = "deferred_rendering"
+-path = "examples/3d/deferred_rendering.rs"
+-doc-scrape-examples = true
+-
+-[package.metadata.example.deferred_rendering]
+-name = "Deferred Rendering"
+-description = "Renders meshes with both forward and deferred pipelines"
+-category = "3D Rendering"
+-wasm = true
+-
+ [[example]]
+ name = "load_gltf"
+ path = "examples/3d/load_gltf.rs"

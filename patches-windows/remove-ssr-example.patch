@@ -1,0 +1,22 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index caea7347b..a4153738f 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -3910,17 +3910,6 @@ description = "Demonstrates visibility ranges"
+ category = "3D Rendering"
+ wasm = true
+ 
+-[[example]]
+-name = "ssr"
+-path = "examples/3d/ssr.rs"
+-doc-scrape-examples = true
+-
+-[package.metadata.example.ssr]
+-name = "Screen Space Reflections"
+-description = "Demonstrates screen space reflections with water ripples"
+-category = "3D Rendering"
+-wasm = false
+-
+ [[example]]
+ name = "camera_sub_view"
+ path = "examples/3d/camera_sub_view.rs"
