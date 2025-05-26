@@ -282,23 +282,6 @@ jobs:
             curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }}/screenshots -F "data=@./$file" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
           done
 
-  mobile-check-result:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs: [take-screenshots]
-    if: always()
-    steps:
-      - name: Wait for screenshots comparison
-        if: ${{ inputs.mobile_percy_project != '' }}
-        run: |
-          # npm install -g @percy/cli@latest
-          # npx percy build:wait --project ${{ inputs.mobile_percy_project }} --commit ${{ inputs.gitref }}
-          # there's an issue with percy APIs, it returns forbidden for this query
-          # for now, just wait a few seconds
-          sleep 30
-        env:
-          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
-
   mobile-check-result-pixel-eagle:
     runs-on: ubuntu-latest
     timeout-minutes: 30
