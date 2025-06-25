@@ -1,0 +1,22 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 87904d32f..92d2f6fbc 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -1734,17 +1734,6 @@ description = "Creates and customizes the internal thread pool"
+ category = "Application"
+ wasm = false
+ 
+-[[example]]
+-name = "no_renderer"
+-path = "examples/app/no_renderer.rs"
+-doc-scrape-examples = true
+-
+-[package.metadata.example.no_renderer]
+-name = "No Renderer"
+-description = "An application that runs with default plugins and displays an empty window, but without an actual renderer"
+-category = "Application"
+-wasm = false
+-
+ [[example]]
+ name = "headless_renderer"
+ path = "examples/app/headless_renderer.rs"
