@@ -24,7 +24,7 @@ on:
       platforms:
         required: false
         type: string
-        default: '["windows-2022", "macos-14", "ubuntu-24.04"]'
+        default: '["windows-2025", "macos-14", "ubuntu-24.04"]'
   workflow_dispatch:
     inputs:
       repository:
@@ -50,7 +50,7 @@ on:
       platforms:
         required: false
         type: string
-        default: '["windows-2022", "macos-14", "ubuntu-24.04"]'
+        default: '["windows-2025", "macos-14", "ubuntu-24.04"]'
 
 jobs:
   split-pages:
@@ -93,12 +93,12 @@ jobs:
       - name: Checkout patches
         uses: actions/checkout@v4
         with:
-          path: 'runner-patches'  
-  
+          path: 'runner-patches'
+
       - name: Apply patches
         shell: pwsh
         run: |
-          Get-ChildItem "runner-patches/patches" -Filter *.patch | 
+          Get-ChildItem "runner-patches/patches" -Filter *.patch |
           Foreach-Object {
               Write-Output "Processing $($_.FullName)"
               git apply --ignore-whitespace $($_.FullName)
@@ -108,7 +108,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Get-ChildItem "runner-patches/patches-windows" -Filter *.patch | 
+          Get-ChildItem "runner-patches/patches-windows" -Filter *.patch |
           Foreach-Object {
               Write-Output "Processing $($_.FullName)"
               git apply --ignore-whitespace $($_.FullName)
@@ -242,7 +242,7 @@ jobs:
           - os: macOS
           - os: Windows
     steps:
-      
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -259,16 +259,16 @@ jobs:
             rsync --verbose --archive $screenshotfolder/* screenshots-${{ matrix.os }}/
             rm -rf $screenshotfolder
           done
-      
+
       - name: Send to Pixel Eagle
-        if: steps.gather-examples.outcome == 'success'        
+        if: steps.gather-examples.outcome == 'success'
         run: |
           run=`curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs --json '{"os":"${{ matrix.os }}", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.id'`
-          
+
           SAVEIFS=$IFS
-          
+
           cd screenshots-${{ matrix.os }}
-          
+
           IFS=$'\n'
 
           # Build a json array of screenshots and their hashes
@@ -282,8 +282,8 @@ jobs:
           done
           hashes=`echo $hashes | rev | cut -c 2- | rev`
           hashes="$hashes]"
-          
-          IFS=$SAVEIFS          
+
+          IFS=$SAVEIFS
 
           # Upload screenshots with unknown hashes
           curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/hashes --json "$hashes" --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.[]|[.name] | @tsv' |
@@ -293,7 +293,7 @@ jobs:
               curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/screenshots -F "data=@./$name" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
               echo
             done
-          
+
           IFS=$SAVEIFS
 
           cd ..
