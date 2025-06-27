@@ -20,7 +20,7 @@ on:
       per_page:
         required: true
         type: string
-        default: '20'
+        default: '10'
       platforms:
         required: false
         type: string
@@ -46,7 +46,7 @@ on:
       per_page:
         required: true
         type: string
-        default: '20'
+        default: '10'
       platforms:
         required: false
         type: string

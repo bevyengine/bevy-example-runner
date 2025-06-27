@@ -7,7 +7,7 @@ on:
       - opened
 
 env:
-  PER_PAGE: 20
+  PER_PAGE: 10
 
 permissions:
   issues: write

@@ -10,7 +10,7 @@ on:
         type: string
 
 env:
-  PER_PAGE: 20
+  PER_PAGE: 10
 
 jobs:
   get-environment:
@@ -48,7 +48,7 @@ jobs:
       repository: "bevyengine/bevy"
       per_page: "${{ needs.get-environment.outputs.per_page }}"
     secrets: inherit
-        
+
   mobile-run:
     name: Mobile
     needs: [get-environment]

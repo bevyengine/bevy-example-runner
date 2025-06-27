@@ -9,7 +9,7 @@ concurrency:
   group: ${{ github.repository }}-example-report
 
 env:
-  PER_PAGE: 20
+  PER_PAGE: 10
 
 jobs:
   get-environment:
