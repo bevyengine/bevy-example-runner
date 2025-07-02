@@ -171,6 +171,18 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
           restore-keys: ${{ runner.os }}-cargo-
 
+      - name: (Windows) Install Warp
+        if: runner.os == 'windows'
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p ./target/release/examples
+
+          # from https://www.nuget.org/packages/Microsoft.Direct3D.WARP
+          nuget install Microsoft.Direct3D.WARP -Version 1.0.14.2 -OutputDirectory . -Source https://api.nuget.org/v3/index.json
+          cp Microsoft.Direct3D.WARP.1.0.14.2/build/native/bin/x64/d3d10warp.dll ./target/release/examples/
+
       - name: Take Screenshots (Linux)
         id: screenshots-linux
         if: runner.os == 'linux'
