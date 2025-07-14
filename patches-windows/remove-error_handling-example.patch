@@ -1,0 +1,23 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index f047040bd..20942e7a6 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -2324,18 +2324,6 @@ description = "Systems are skipped if their parameters cannot be acquired"
+ category = "ECS (Entity Component System)"
+ wasm = false
+ 
+-[[example]]
+-name = "error_handling"
+-path = "examples/ecs/error_handling.rs"
+-doc-scrape-examples = true
+-required-features = ["bevy_mesh_picking_backend"]
+-
+-[package.metadata.example.error_handling]
+-name = "Error handling"
+-description = "How to return and handle errors across the ECS"
+-category = "ECS (Entity Component System)"
+-wasm = false
+-
+ [[example]]
+ name = "startup_system"
+ path = "examples/ecs/startup_system.rs"
