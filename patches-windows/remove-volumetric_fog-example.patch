@@ -1,0 +1,22 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index f047040bd..c0e553c5e 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -4111,17 +4111,6 @@ description = "Demonstrates depth of field"
+ category = "3D Rendering"
+ wasm = false
+ 
+-[[example]]
+-name = "volumetric_fog"
+-path = "examples/3d/volumetric_fog.rs"
+-doc-scrape-examples = true
+-
+-[package.metadata.example.volumetric_fog]
+-name = "Volumetric fog"
+-description = "Demonstrates volumetric fog and lighting"
+-category = "3D Rendering"
+-wasm = true
+-
+ [[example]]
+ name = "client"
+ path = "examples/remote/client.rs"
