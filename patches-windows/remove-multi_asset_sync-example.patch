@@ -1,0 +1,23 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index f047040bd..9b5b38329 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -1954,18 +1954,6 @@ description = "How to configure the texture to repeat instead of the default cla
+ category = "Assets"
+ wasm = true
+ 
+-# Assets
+-[[example]]
+-name = "multi_asset_sync"
+-path = "examples/asset/multi_asset_sync.rs"
+-doc-scrape-examples = true
+-
+-[package.metadata.example.multi_asset_sync]
+-name = "Multi-asset synchronization"
+-description = "Demonstrates how to wait for multiple assets to be loaded."
+-category = "Assets"
+-wasm = true
+-
+ # Async Tasks
+ [[example]]
+ name = "async_compute"

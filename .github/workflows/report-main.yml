@@ -5,15 +5,11 @@ on:
   schedule:
     - cron: "0 */3 * * *"
 
-env:
-  PER_PAGE: 10
-
 jobs:
   get-environment:
     name: Get Environment
     runs-on: ubuntu-latest
     outputs:
-      per_page: ${{ env.PER_PAGE }}
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
       pixeleagle_project: ${{ steps.env.outputs.pixeleagle_project }}
@@ -53,7 +49,6 @@ jobs:
       pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
-      per_page: "${{ needs.get-environment.outputs.per_page }}"
     secrets: inherit
 
   mobile-run:

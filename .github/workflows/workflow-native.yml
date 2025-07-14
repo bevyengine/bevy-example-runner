@@ -6,7 +6,7 @@ on:
       repository:
         required: true
         type: string
-        default: 'bevyengine/bevy'
+        default: "bevyengine/bevy"
       gitref:
         required: true
         type: string
@@ -16,11 +16,11 @@ on:
       branch:
         required: true
         type: string
-        default: 'main'
+        default: "main"
       per_page:
         required: true
         type: string
-        default: '10'
+        default: "20"
       platforms:
         required: false
         type: string
@@ -30,27 +30,32 @@ on:
       repository:
         required: true
         type: string
-        default: 'bevyengine/bevy'
+        default: "bevyengine/bevy"
+        description: "Bevy repository to use"
       gitref:
         required: true
         type: string
-        default: 'main'
+        default: "main"
+        description: "Git reference to use"
       pixeleagle_project:
         required: true
         type: string
-        default: 'B25A040A-A980-4602-B90C-D480AB84076D'
+        default: "B25A040A-A980-4602-B90C-D480AB84076D"
+        description: "Pixeleagle project ID"
       branch:
         required: true
         type: string
-        default: 'main'
+        description: "Branch name that will be used for the report"
       per_page:
         required: true
         type: string
-        default: '10'
+        default: "20"
+        description: "Number of examples to run per job"
       platforms:
         required: false
         type: string
         default: '["windows-2025", "macos-14", "ubuntu-24.04"]'
+        description: "List of platforms to run the examples on"
 
 jobs:
   split-pages:
@@ -83,7 +88,6 @@ jobs:
         page: ${{ fromJSON(needs.split-pages.outputs.pages) }}
 
     steps:
-
       - name: Checkout Bevy
         uses: actions/checkout@v4
         with:
@@ -93,7 +97,7 @@ jobs:
       - name: Checkout patches
         uses: actions/checkout@v4
         with:
-          path: 'runner-patches'
+          path: "runner-patches"
 
       - name: Apply patches
         shell: pwsh
@@ -242,7 +246,6 @@ jobs:
           - os: macOS
           - os: Windows
     steps:
-
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
