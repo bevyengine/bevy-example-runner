@@ -3,7 +3,7 @@ name: Upkeep - Update Cache
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: "0 0 * * *"
 
 jobs:
   build-cache:
@@ -14,16 +14,15 @@ jobs:
         os: [ubuntu-24.04, macos-14, windows-2025]
 
     steps:
-
       - name: Checkout Bevy main branch
         uses: actions/checkout@v4
         with:
-          repository: 'bevyengine/bevy'
+          repository: "bevyengine/bevy"
 
       - name: Checkout patches
         uses: actions/checkout@v4
         with:
-          path: 'runner-patches'
+          path: "runner-patches"
 
       - name: Apply patches
         shell: pwsh
@@ -42,7 +41,7 @@ jobs:
         run: |
           sudo apt-get update;
           DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -yq \
-            libasound2-dev libudev-dev libxkbcommon-x11-0;
+            libasound2-dev libudev-dev libxkbcommon-x11-0 libwayland-dev;
 
       - name: Install xvfb, llvmpipe and lavapipe
         if: runner.os == 'linux'

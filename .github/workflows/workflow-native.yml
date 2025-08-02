@@ -132,7 +132,7 @@ jobs:
         run: |
           sudo apt-get update;
           DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -yq \
-            libasound2-dev libudev-dev libxkbcommon-x11-0;
+            libasound2-dev libudev-dev libxkbcommon-x11-0 libwayland-dev;
 
       - name: (Linux) install xvfb, llvmpipe and lavapipe
         if: runner.os == 'linux'
