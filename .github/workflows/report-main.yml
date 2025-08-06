@@ -90,7 +90,7 @@ jobs:
           path: "results"
 
       - name: Download all status artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: status-*
 
@@ -138,7 +138,7 @@ jobs:
           curl 'https://percy.io/api/v1/builds?filter\[sha\]=${{ needs.get-environment.outputs.gitref }}' -H 'Authorization: Token token=${{ secrets.PERCY_TOKEN_MOBILE }}' | jq '.data[0].attributes' > results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/mobile-percy
 
       - name: Download all Pixel Eagle artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: pixeleagle-*
 
