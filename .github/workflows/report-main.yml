@@ -17,7 +17,7 @@ jobs:
       updated: ${{ steps.version-check.outputs.updated }}
     steps:
       - name: Checkout Bevy main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: "bevyengine/bevy"
           ref: "main"
@@ -28,7 +28,7 @@ jobs:
           echo "date=`date +%Y%m%d%H%M`" >> $GITHUB_OUTPUT
           echo "pixeleagle_project=B25A040A-A980-4602-B90C-D480AB84076D" >> $GITHUB_OUTPUT
           echo "mobile_percy_project=dede4209/Bevy-Mobile-Example" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: "results"
           path: "results"
@@ -84,7 +84,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: "results"
           path: "results"

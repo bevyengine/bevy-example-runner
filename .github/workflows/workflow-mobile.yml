@@ -62,13 +62,13 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.gitref }}
 
       - name: Checkout patches
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: "runner-patches"
 
@@ -112,13 +112,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.gitref }}
 
       - name: Checkout patches
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: "runner-patches"
 
@@ -225,13 +225,13 @@ jobs:
             os_version: "14.0"
             adapter: "Adreno (TM) 740"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.gitref }}
 
       - name: Checkout patches
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: "runner-patches"
 
