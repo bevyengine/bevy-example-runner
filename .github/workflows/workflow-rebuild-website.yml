@@ -27,7 +27,7 @@ jobs:
         run: |
           cargo run -- results
       - name: Store generated html
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./site
       - name: Deploy to GitHub Pages
