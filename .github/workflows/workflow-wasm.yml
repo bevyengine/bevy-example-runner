@@ -73,7 +73,7 @@ jobs:
           #   browser: "chromium"
           #   api: "webgpu"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.gitref }}

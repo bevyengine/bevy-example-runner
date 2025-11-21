@@ -65,7 +65,7 @@ jobs:
       pages: ${{ steps.env.outputs.pages }}
     steps:
       - name: Checkout Bevy
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: ${{ inputs.repository}}
           ref: ${{ inputs.gitref }}
@@ -89,13 +89,13 @@ jobs:
 
     steps:
       - name: Checkout Bevy
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.gitref }}
 
       - name: Checkout patches
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: "runner-patches"
 
