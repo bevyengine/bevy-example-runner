@@ -165,6 +165,7 @@ jobs:
 
       - uses: actions/cache/restore@v4
         id: restore-cache
+        continue-on-error: true
         with:
           path: |
             ~/.cargo/bin/
