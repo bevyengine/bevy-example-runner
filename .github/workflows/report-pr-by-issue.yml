@@ -58,7 +58,7 @@ jobs:
       pixeleagle_project: ${{ steps.env.outputs.pixeleagle_project }}
     steps:
       - name: Checkout Bevy main branch
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: "bevyengine/bevy"
       - name: Switch to PR
