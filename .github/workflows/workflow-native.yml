@@ -274,7 +274,7 @@ jobs:
 
           cd screenshots-${{ matrix.os }}
 
-          ./pixeleagle upload-screenshots $run */*.png
+          ../pixeleagle upload-screenshots $run */*.png
 
           curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto --json '{"os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-${{ matrix.os }}.json
           cat pixeleagle-${{ matrix.os }}.json
