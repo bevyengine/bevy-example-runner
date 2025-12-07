@@ -237,7 +237,7 @@ jobs:
 
   send-to-pixel-eagle:
     name: Send screenshots to Pixel Eagle
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     needs: [take-screenshots]
     strategy:
       fail-fast: false
@@ -267,45 +267,21 @@ jobs:
       - name: Send to Pixel Eagle
         if: steps.gather-examples.outcome == 'success'
         run: |
-          run=`curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs --json '{"os":"${{ matrix.os }}", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.id'`
+          curl -O https://pixel-eagle.com/assets/pixeleagle
+          chmod 755 pixeleagle
 
-          SAVEIFS=$IFS
+          run=`./pixeleagle new-run --metadata '{"os":"${{ matrix.os }}", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}'`
 
           cd screenshots-${{ matrix.os }}
 
-          IFS=$'\n'
-
-          # Build a json array of screenshots and their hashes
-          hashes='[';
-          for screenshot in $(find . -type f -name "*.png");
-          do
-            name=${screenshot:2}
-            echo $name
-            hash=`shasum -a 256 $screenshot | awk '{print $1}'`
-            hashes="$hashes [\"$name\",\"$hash\"],"
-          done
-          hashes=`echo $hashes | rev | cut -c 2- | rev`
-          hashes="$hashes]"
-
-          IFS=$SAVEIFS
-
-          # Upload screenshots with unknown hashes
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/hashes --json "$hashes" --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.[]|[.name] | @tsv' |
-            while IFS=$'\t' read -r name; do
-              name=`echo $name | tr -d '"'`
-              echo "Uploading $name"
-              curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/screenshots -F "data=@./$name" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
-              echo
-            done
-
-          IFS=$SAVEIFS
-
-          cd ..
+          ./pixeleagle upload-screenshots $run */*.png
 
           curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto --json '{"os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-${{ matrix.os }}.json
           cat pixeleagle-${{ matrix.os }}.json
 
           echo "created run $run"
+        env:
+          PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
 
       - name: Upload Pixel Eagle status
         uses: actions/upload-artifact@v5
