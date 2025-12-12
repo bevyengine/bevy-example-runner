@@ -73,7 +73,7 @@ jobs:
         run: cargo run -p example-showcase -- --page 1 --per-page 1 run --in-ci --ignore-stress-tests --screenshot-frame 0 --fixed-frame-time 0.02 --stop-frame 50
 
       - name: Save cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             ~/.cargo/bin/
