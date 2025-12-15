@@ -102,7 +102,7 @@ jobs:
             -F "file=@examples/mobile/bevy_mobile_example.ipa" \
             -F "custom_id=$GITHUB_RUN_ID"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: app.ipa
           path: examples/mobile/bevy_mobile_example.ipa
@@ -157,7 +157,7 @@ jobs:
             -F "file=@examples/mobile/android_example/app/build/outputs/apk/debug/app-debug.apk" \
             -F "custom_id=$GITHUB_RUN_ID"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: app.apk
           path: examples/mobile/android_example/app/build/outputs/apk/debug/app-debug.apk
@@ -266,7 +266,7 @@ jobs:
 
       - name: Save screenshots
         if: ${{ always() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: screenshots-${{ matrix.device }}-${{ matrix.os_version }}
           path: .github/start-mobile-example/*.png
@@ -294,7 +294,7 @@ jobs:
           cat pixeleagle-mobile.json
 
       - name: Upload Pixel Eagle status
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pixeleagle-mobile
           path: pixeleagle-mobile.json

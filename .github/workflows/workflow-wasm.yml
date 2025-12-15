@@ -113,7 +113,7 @@ jobs:
           cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
 
       - name: Save screenshots
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: screenshots-wasm-${{ matrix.browser }}-${{ matrix.api }}-${{ runner.os }}
           path: .github/start-wasm-example/screenshot-*.png
