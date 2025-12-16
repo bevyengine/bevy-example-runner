@@ -1,10 +1,10 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index 6c7361f723..fec26de636 100644
+index e19c42cdb..f7111c544 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -3825,17 +3825,6 @@ rustdoc-args = ["-Zunstable-options", "--generate-link-to-definition"]
+@@ -4670,17 +4670,6 @@ rustdoc-args = [
+ ]
  all-features = true
- cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
  
 -[[example]]
 -name = "monitor_info"
