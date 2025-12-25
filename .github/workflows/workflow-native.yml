@@ -223,13 +223,13 @@ jobs:
           echo "has_success=$(![String]::IsNullOrWhiteSpace((Get-content example-showcase-reports/successes)))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Upload Screenshots
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: screenshots-${{ runner.os }}-${{ matrix.page }}
           path: screenshots
 
       - name: Upload Status
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: status-${{ runner.os }}-${{ matrix.page }}
           path: |
@@ -308,7 +308,7 @@ jobs:
           echo "created run $run"
 
       - name: Upload Pixel Eagle status
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pixeleagle-${{ matrix.os }}
           path: pixeleagle-${{ matrix.os }}.json
