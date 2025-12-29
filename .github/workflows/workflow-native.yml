@@ -163,7 +163,7 @@ jobs:
 
           cp dxc/* .
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v5
         id: restore-cache
         continue-on-error: true
         with:
