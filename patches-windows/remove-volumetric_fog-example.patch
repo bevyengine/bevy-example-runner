@@ -1,15 +1,16 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index f047040bd..c0e553c5e 100644
+index b787a012f..073183ab3 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -4111,17 +4111,6 @@ description = "Demonstrates depth of field"
+@@ -4679,18 +4679,6 @@ description = "Demonstrates depth of field"
  category = "3D Rendering"
  wasm = false
  
 -[[example]]
 -name = "volumetric_fog"
 -path = "examples/3d/volumetric_fog.rs"
--doc-scrape-examples = true
+-# Causes an ICE on docs.rs
+-doc-scrape-examples = false
 -
 -[package.metadata.example.volumetric_fog]
 -name = "Volumetric fog"

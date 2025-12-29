@@ -1,15 +1,16 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index f773ad40b..6ac0a1c68 100644
+index b787a012f..cae4d56e2 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -3651,30 +3651,6 @@ description = "Demonstrates volumetric fog and lighting"
+@@ -4691,31 +4691,6 @@ description = "Demonstrates volumetric fog and lighting"
  category = "3D Rendering"
  wasm = true
  
 -[[example]]
 -name = "client"
 -path = "examples/remote/client.rs"
--doc-scrape-examples = true
+-# Causes an ICE on docs.rs
+-doc-scrape-examples = false
 -required-features = ["bevy_remote"]
 -
 -[package.metadata.example.client]

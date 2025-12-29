@@ -1,17 +1,17 @@
 diff --git a/examples/mobile/src/lib.rs b/examples/mobile/src/lib.rs
-index ee49c01c5..e71a027fc 100644
+index b70da4c67..8716ae4f8 100644
 --- a/examples/mobile/src/lib.rs
 +++ b/examples/mobile/src/lib.rs
-@@ -175,8 +175,11 @@ fn setup_music(asset_server: Res<AssetServer>, mut commands: Commands) {
+@@ -194,8 +194,11 @@ fn setup_music(asset_server: Res<AssetServer>, mut commands: Commands) {
  // This is handled by the OS on iOS, but not on Android.
  fn handle_lifetime(
-     mut lifecycle_events: EventReader<AppLifecycle>,
+     mut app_lifecycle_reader: MessageReader<AppLifecycle>,
 -    music_controller: Single<&AudioSink>,
 +    music_controller: Option<Single<&AudioSink>>,
  ) {
 +    let Some(music_controller) = music_controller else {
 +        return;
 +    };
-     for event in lifecycle_events.read() {
-         match event {
+     for app_lifecycle in app_lifecycle_reader.read() {
+         match app_lifecycle {
              AppLifecycle::Idle | AppLifecycle::WillSuspend | AppLifecycle::WillResume => {}

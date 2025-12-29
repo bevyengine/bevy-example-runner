@@ -1,15 +1,16 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index 7bd99fc3a..f6a64d097 100644
+index b787a012f..9306ae2fd 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -3526,17 +3526,6 @@ description = "Illustrates making the window transparent and hiding the window d
+@@ -4153,18 +4153,6 @@ description = "Illustrates making the window transparent and hiding the window d
  category = "Window"
  wasm = false
  
 -[[example]]
 -name = "window_settings"
 -path = "examples/window/window_settings.rs"
--doc-scrape-examples = true
+-# Causes an ICE on docs.rs
+-doc-scrape-examples = false
 -
 -[package.metadata.example.window_settings]
 -name = "Window Settings"
