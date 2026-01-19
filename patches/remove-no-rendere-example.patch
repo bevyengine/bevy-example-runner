@@ -1,8 +1,8 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index 87904d32f..92d2f6fbc 100644
+index dc0cf74f0..a4e034119 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -1734,17 +1734,6 @@ description = "Creates and customizes the internal thread pool"
+@@ -1932,17 +1932,6 @@ description = "Creates and customizes the internal thread pool"
  category = "Application"
  wasm = false
  
@@ -18,5 +18,5 @@ index 87904d32f..92d2f6fbc 100644
 -wasm = false
 -
  [[example]]
- name = "headless_renderer"
- path = "examples/app/headless_renderer.rs"
+ name = "externally_driven_headless_renderer"
+ path = "examples/app/externally_driven_headless_renderer.rs"
