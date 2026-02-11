@@ -1,8 +1,8 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index b787a012f..073183ab3 100644
+index 690aad88b..afd7ddfc4 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -4679,18 +4679,6 @@ description = "Demonstrates depth of field"
+@@ -4895,18 +4895,6 @@ description = "Demonstrates depth of field"
  category = "3D Rendering"
  wasm = false
  
@@ -19,5 +19,5 @@ index b787a012f..073183ab3 100644
 -wasm = true
 -
  [[example]]
- name = "client"
- path = "examples/remote/client.rs"
+ name = "anisotropy"
+ path = "examples/3d/anisotropy.rs"
