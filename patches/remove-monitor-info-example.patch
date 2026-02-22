@@ -1,16 +1,15 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index b787a012f..7df4ec59c 100644
+index 27470ce17..e12f56227 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -4967,18 +4967,6 @@ rustdoc-args = [
+@@ -4944,17 +4944,6 @@ rustdoc-args = [
  ]
  all-features = true
  
 -[[example]]
 -name = "monitor_info"
 -path = "examples/window/monitor_info.rs"
--# Causes an ICE on docs.rs
--doc-scrape-examples = false
+-doc-scrape-examples = true
 -
 -[package.metadata.example.monitor_info]
 -name = "Monitor info"
