@@ -1,16 +1,15 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index b787a012f..1b3680319 100644
+index 27470ce17..6fc31a400 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -4741,30 +4741,6 @@ description = "Demonstrates how to enqueue custom draw commands in a render phas
+@@ -4713,28 +4713,6 @@ description = "Demonstrates how to enqueue custom draw commands in a render phas
  category = "Shaders"
  wasm = true
  
 -[[example]]
 -name = "fog_volumes"
 -path = "examples/3d/fog_volumes.rs"
--# Causes an ICE on docs.rs
--doc-scrape-examples = false
+-doc-scrape-examples = true
 -
 -[package.metadata.example.fog_volumes]
 -name = "Fog volumes"
@@ -21,8 +20,7 @@ index b787a012f..1b3680319 100644
 -[[example]]
 -name = "scrolling_fog"
 -path = "examples/3d/scrolling_fog.rs"
--# Causes an ICE on docs.rs
--doc-scrape-examples = false
+-doc-scrape-examples = true
 -
 -[package.metadata.example.scrolling_fog]
 -name = "Scrolling fog"

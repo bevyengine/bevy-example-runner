@@ -1,16 +1,16 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index b787a012f..4ba12d635 100644
+index 27470ce17..0c8126587 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -4618,18 +4618,6 @@ description = "Demonstrates visibility ranges"
+@@ -4598,18 +4598,6 @@ description = "Demonstrates visibility ranges"
  category = "3D Rendering"
  wasm = true
  
 -[[example]]
 -name = "ssr"
 -path = "examples/3d/ssr.rs"
--# Causes an ICE on docs.rs
--doc-scrape-examples = false
+-doc-scrape-examples = true
+-required-features = ["bluenoise_texture"]
 -
 -[package.metadata.example.ssr]
 -name = "Screen Space Reflections"

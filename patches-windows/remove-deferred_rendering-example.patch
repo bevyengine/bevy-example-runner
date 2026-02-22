@@ -1,16 +1,15 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index b787a012f..788348d11 100644
+index 27470ce17..08df2d124 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -1308,18 +1308,6 @@ description = "Decal rendering"
+@@ -1307,17 +1307,6 @@ description = "Decal rendering"
  category = "3D Rendering"
  wasm = true
  
 -[[example]]
 -name = "deferred_rendering"
 -path = "examples/3d/deferred_rendering.rs"
--# Causes an ICE on docs.rs
--doc-scrape-examples = false
+-doc-scrape-examples = true
 -
 -[package.metadata.example.deferred_rendering]
 -name = "Deferred Rendering"

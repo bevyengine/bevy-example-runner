@@ -1,8 +1,8 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index b787a012f..d5896b2f6 100644
+index 27470ce17..cbc9c1ae9 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -2090,19 +2090,6 @@ description = "How to configure the texture to repeat instead of the default cla
+@@ -2078,18 +2078,6 @@ description = "How to configure the texture to repeat instead of the default cla
  category = "Assets"
  wasm = true
  
@@ -10,8 +10,7 @@ index b787a012f..d5896b2f6 100644
 -[[example]]
 -name = "multi_asset_sync"
 -path = "examples/asset/multi_asset_sync.rs"
--# Causes an ICE on docs.rs
--doc-scrape-examples = false
+-doc-scrape-examples = true
 -
 -[package.metadata.example.multi_asset_sync]
 -name = "Multi-asset synchronization"
