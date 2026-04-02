@@ -26,7 +26,7 @@ on:
       pixeleagle_project:
         required: true
         type: string
-        default: 'B25A040A-A980-4602-B90C-D480AB84076D'
+        default: "B25A040A-A980-4602-B90C-D480AB84076D"
       branch:
         required: true
         type: string
@@ -117,13 +117,13 @@ jobs:
         with:
           name: screenshots-wasm-${{ matrix.browser }}-${{ matrix.api }}-${{ runner.os }}
           path: .github/start-wasm-example/screenshot-*.png
-    
+
       - name: Send to Pixel Eagle
         run: |
           run=`curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs -H 'Content-Type: application/json' -d '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.id'`
-            
+
           SAVEIFS=$IFS
-          
+
           IFS=$'\n'
 
           cd .github/start-wasm-example
@@ -140,8 +140,8 @@ jobs:
           done
           hashes=`echo $hashes | rev | cut -c 2- | rev`
           hashes="$hashes]"
-          
-          IFS=$SAVEIFS          
+
+          IFS=$SAVEIFS
 
           # Upload screenshots with unknown hashes
           curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/hashes -H 'Content-Type: application/json' -d "$hashes" --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.[]|[.name] | @tsv' |
@@ -151,7 +151,14 @@ jobs:
               curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/screenshots -F "data=@./screenshot-$name-${{ matrix.browser }}.png" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
               echo
             done
-          
+
           IFS=$SAVEIFS
 
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto -H 'Content-Type: application/json' -d '{"api":"<equal>", "browser":"<equal>", "host-os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }}
+          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto -H 'Content-Type: application/json' -d '{"api":"<equal>", "browser":"<equal>", "host-os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+          cat pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+
+      - name: Upload Pixel Eagle status
+        uses: actions/upload-artifact@v5
+        with:
+          name: pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}
+          path: pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json

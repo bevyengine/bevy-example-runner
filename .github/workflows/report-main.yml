@@ -79,7 +79,7 @@ jobs:
   update-results:
     name: Update Results
     runs-on: ubuntu-latest
-    needs: [get-environment, native-run, mobile-run]
+    needs: [get-environment, native-run, mobile-run, wasm-run]
     if: always() && (needs.get-environment.outputs.updated == 'true' || github.event_name == 'workflow_dispatch')
     permissions:
       contents: write
@@ -148,6 +148,11 @@ jobs:
           mv pixeleagle-macOS/pixeleagle-macOS.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/macOS-pixeleagle
           mv pixeleagle-Windows/pixeleagle-Windows.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/Windows-pixeleagle
           mv pixeleagle-mobile/pixeleagle-mobile.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/mobile-pixeleagle
+          for wasm_report in pixeleagle-wasm-*
+          do
+            name=${wasm_report#pixeleagle-}
+            mv $wasm_report/*.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/$name-pixeleagle
+          done
 
       - name: Store results in git
         run: |
