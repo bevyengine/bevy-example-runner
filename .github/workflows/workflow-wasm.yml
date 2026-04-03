@@ -63,12 +63,14 @@ jobs:
           # - runner: "ubuntu-latest"
           #   browser: "firefox"
           #   api: "webgpu"
-          - runner: "windows-latest"
-            browser: "chromium"
-            api: "webgpu"
-          - runner: "windows-latest"
-            browser: "firefox"
-            api: "webgpu"
+          # Unable to find a GPU!
+          # - runner: "windows-latest"
+          #   browser: "chromium"
+          #   api: "webgpu"
+          # Failed to create wgpu surface
+          # - runner: "windows-latest"
+          #   browser: "firefox"
+          #   api: "webgpu"
 
           - runner: "ubuntu-latest"
             browser: "firefox"
@@ -82,15 +84,18 @@ jobs:
           - runner: "macos-latest"
             browser: "webkit"
             api: "webgl2"
-          - runner: "macos-latest"
-            browser: "firefox"
-            api: "webgl2"
-          - runner: "windows-latest"
-            browser: "firefox"
-            api: "webgl2"
-          - runner: "windows-latest"
-            browser: "chromium"
-            api: "webgl2"
+          # crash: Too many bindings of type StorageBuffers in Stage ShaderStages(COMPUTE)
+          # - runner: "macos-latest"
+          #   browser: "firefox"
+          #   api: "webgl2"
+          # Failed to create wgpu surface
+          # - runner: "windows-latest"
+          #   browser: "firefox"
+          #   api: "webgl2"
+          # crash: BindGroupLayout with 'sparse buffer update bind group layout' label is invalid
+          # - runner: "windows-latest"
+          #   browser: "chromium"
+          #   api: "webgl2"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -117,8 +122,7 @@ jobs:
         if: runner.os == 'windows'
         shell: bash
         run: |
-          # xshell uses std::process::Command which only resolves .exe on
-          # Windows, not .cmd (xshell#82). Patch npx -> npx.cmd in the tool.
+          # workaround for xshell not finding npx (not auto adding the .cmd extension)
           sed -i 's/"npx /"npx.cmd /' tools/build-wasm-example/src/main.rs
 
           # start a webserver
