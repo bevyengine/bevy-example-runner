@@ -43,10 +43,24 @@ jobs:
             browser: "chromium"
             api: "webgpu"
           - runner: "macos-latest"
-            browser: "webkit"
+            browser: "firefox"
             api: "webgpu"
+          # Failed to create wgpu surface
+          # - runner: "macos-latest"
+          #   browser: "webkit"
+          #   api: "webgpu"
+          # Unable to find a GPU
+          # - runner: "ubuntu-latest"
+          #   browser: "chromium"
+          #   api: "webgpu"
           - runner: "ubuntu-latest"
+            browser: "firefox"
+            api: "webgpu"
+          - runner: "windows-latest"
             browser: "chromium"
+            api: "webgpu"
+          - runner: "windows-latest"
+            browser: "firefox"
             api: "webgpu"
 
           - runner: "ubuntu-latest"
@@ -64,12 +78,12 @@ jobs:
           - runner: "macos-latest"
             browser: "firefox"
             api: "webgl2"
-          # - runner: "macos-latest"
-          #   browser: "firefox"
-          #   api: "webgpu"
-          # - runner: "ubuntu-latest"
-          #   browser: "firefox"
-          #   api: "webgpu"
+          - runner: "windows-latest"
+            browser: "firefox"
+            api: "webgl2"
+          - runner: "windows-latest"
+            browser: "chromium"
+            api: "webgl2"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -92,7 +106,16 @@ jobs:
           npx playwright install --with-deps
           cd ../..
 
-      - name: Run examples
+      - name: Run examples (windows)
+        if: runner.os == 'windows'
+        shell: bash
+        run: |
+          # start a webserver
+          python3 -m http.server --directory examples/wasm &
+
+          cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
+
+      - name: Run examples (linux)
         if: runner.os == 'linux'
         shell: bash
         run: |
@@ -101,7 +124,7 @@ jobs:
 
           xvfb-run cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
 
-      - name: Run examples
+      - name: Run examples (macos)
         if: runner.os == 'macos'
         shell: bash
         run: |
