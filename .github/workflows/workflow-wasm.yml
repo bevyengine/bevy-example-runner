@@ -20,16 +20,22 @@ on:
       repository:
         required: true
         type: string
+        default: "bevyengine/bevy"
+        description: "Bevy repository to use"
       gitref:
         required: true
         type: string
+        default: "main"
+        description: "Git reference to use"
       pixeleagle_project:
         required: true
         type: string
         default: "B25A040A-A980-4602-B90C-D480AB84076D"
+        description: "Pixeleagle project ID"
       branch:
         required: true
         type: string
+        description: "Branch name that will be used for the report"
 
 jobs:
   wasm-run:
