@@ -59,9 +59,10 @@ jobs:
           # - runner: "ubuntu-latest"
           #   browser: "chromium"
           #   api: "webgpu"
-          - runner: "ubuntu-latest"
-            browser: "firefox"
-            api: "webgpu"
+          # Failed to create wgpu surface
+          # - runner: "ubuntu-latest"
+          #   browser: "firefox"
+          #   api: "webgpu"
           - runner: "windows-latest"
             browser: "chromium"
             api: "webgpu"
@@ -116,6 +117,10 @@ jobs:
         if: runner.os == 'windows'
         shell: bash
         run: |
+          # xshell uses std::process::Command which only resolves .exe on
+          # Windows, not .cmd (xshell#82). Patch npx -> npx.cmd in the tool.
+          sed -i 's/"npx /"npx.cmd /' tools/build-wasm-example/src/main.rs
+
           # start a webserver
           python3 -m http.server --directory examples/wasm &
 
