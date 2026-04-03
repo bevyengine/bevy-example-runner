@@ -154,8 +154,8 @@ jobs:
 
           IFS=$SAVEIFS
 
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto -H 'Content-Type: application/json' -d '{"api":"<equal>", "browser":"<equal>", "host-os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
-          cat pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto -H 'Content-Type: application/json' -d '{"api":"<equal>", "browser":"<equal>", "host-os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > $GITHUB_WORKSPACE/pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+          cat $GITHUB_WORKSPACE/pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
 
       - name: Upload Pixel Eagle status
         uses: actions/upload-artifact@v5
