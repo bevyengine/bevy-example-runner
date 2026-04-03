@@ -20,16 +20,22 @@ on:
       repository:
         required: true
         type: string
+        default: "bevyengine/bevy"
+        description: "Bevy repository to use"
       gitref:
         required: true
         type: string
+        default: "main"
+        description: "Git reference to use"
       pixeleagle_project:
         required: true
         type: string
         default: "B25A040A-A980-4602-B90C-D480AB84076D"
+        description: "Pixeleagle project ID"
       branch:
         required: true
         type: string
+        description: "Branch name that will be used for the report"
 
 jobs:
   wasm-run:
@@ -39,39 +45,57 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: "macos-14"
+          - runner: "macos-latest"
             browser: "chromium"
             api: "webgpu"
-          - runner: "ubuntu-24.04"
+          - runner: "macos-latest"
+            browser: "firefox"
+            api: "webgpu"
+          # Failed to create wgpu surface
+          # - runner: "macos-latest"
+          #   browser: "webkit"
+          #   api: "webgpu"
+          # Unable to find a GPU
+          # - runner: "ubuntu-latest"
+          #   browser: "chromium"
+          #   api: "webgpu"
+          # Failed to create wgpu surface
+          # - runner: "ubuntu-latest"
+          #   browser: "firefox"
+          #   api: "webgpu"
+          # Unable to find a GPU!
+          # - runner: "windows-latest"
+          #   browser: "chromium"
+          #   api: "webgpu"
+          # Failed to create wgpu surface
+          # - runner: "windows-latest"
+          #   browser: "firefox"
+          #   api: "webgpu"
+
+          - runner: "ubuntu-latest"
             browser: "firefox"
             api: "webgl2"
-          # works, but text is buggy
-          # - runner: "ubuntu-latest"
-          #   browser: "chromium"
-          #   api: "webgl2"
-          # doesn't work but should, don't know why
-          # - runner: "macos-14"
-          #   browser: "chromium"
-          #   api: "webgl2"
-          # - runner: "macos-14"
-          #   browser: "webkit"
-          #   api: "webgl2"
-          # - runner: "macos-14"
+          - runner: "ubuntu-latest"
+            browser: "chromium"
+            api: "webgl2"
+          - runner: "macos-latest"
+            browser: "chromium"
+            api: "webgl2"
+          - runner: "macos-latest"
+            browser: "webkit"
+            api: "webgl2"
+          # crash: Too many bindings of type StorageBuffers in Stage ShaderStages(COMPUTE)
+          # - runner: "macos-latest"
           #   browser: "firefox"
           #   api: "webgl2"
-          # doesn't work for now, that's expected
-          # - runner: "macos-14"
-          #   browser: "webkit"
-          #   api: "webgpu"
-          # - runner: "macos-14"
+          # Failed to create wgpu surface
+          # - runner: "windows-latest"
           #   browser: "firefox"
-          #   api: "webgpu"
-          # - runner: "ubuntu-latest"
-          #   browser: "firefox"
-          #   api: "webgpu"
-          # - runner: "ubuntu-latest"
+          #   api: "webgl2"
+          # crash: BindGroupLayout with 'sparse buffer update bind group layout' label is invalid
+          # - runner: "windows-latest"
           #   browser: "chromium"
-          #   api: "webgpu"
+          #   api: "webgl2"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -94,7 +118,19 @@ jobs:
           npx playwright install --with-deps
           cd ../..
 
-      - name: Run examples
+      - name: Run examples (windows)
+        if: runner.os == 'windows'
+        shell: bash
+        run: |
+          # workaround for xshell not finding npx (not auto adding the .cmd extension)
+          sed -i 's/"npx /"npx.cmd /' tools/build-wasm-example/src/main.rs
+
+          # start a webserver
+          python3 -m http.server --directory examples/wasm &
+
+          cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
+
+      - name: Run examples (linux)
         if: runner.os == 'linux'
         shell: bash
         run: |
@@ -103,7 +139,7 @@ jobs:
 
           xvfb-run cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
 
-      - name: Run examples
+      - name: Run examples (macos)
         if: runner.os == 'macos'
         shell: bash
         run: |
