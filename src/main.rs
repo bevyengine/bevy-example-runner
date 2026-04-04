@@ -132,6 +132,7 @@ fn main() {
     let mut all_examples = HashSet::new();
     let mut runs = vec![];
     let mut all_mobile_platforms = HashSet::new();
+    let mut all_wasm_platforms = HashSet::new();
 
     let mut folders = paths
         .filter_map(|dir| dir.map(|d| d.path()).ok())
@@ -161,9 +162,21 @@ fn main() {
                 continue;
             }
             let path = file.path();
-            let mut name = path.file_name().unwrap().to_str().unwrap().split('-');
-            let platform = Platform::from_str(name.next().unwrap()).unwrap();
-            let kind = Kind::from_str(name.next().unwrap()).unwrap();
+            let file_name_str = path.file_name().unwrap().to_str().unwrap();
+
+            let (platform, kind) = if file_name_str.starts_with("wasm-") {
+                let rest = &file_name_str[5..];
+                let last_dash = rest.rfind('-').unwrap();
+                let wasm_tag = rest[..last_dash].to_string();
+                let kind = Kind::from_str(&rest[last_dash + 1..]).unwrap();
+                all_wasm_platforms.insert(wasm_tag.clone());
+                (Platform::Tag(wasm_tag), kind)
+            } else {
+                let mut name = file_name_str.split('-');
+                let platform = Platform::from_str(name.next().unwrap()).unwrap();
+                let kind = Kind::from_str(name.next().unwrap()).unwrap();
+                (platform, kind)
+            };
 
             if [Kind::Successes, Kind::Failures, Kind::NoScreenshots].contains(&kind) {
                 println!("  - {:?} / {:?}", kind, platform);
@@ -204,6 +217,7 @@ fn main() {
                     snapshot_url,
                 } in screenshots.into_iter()
                 {
+                    let is_wasm = matches!(&platform, Platform::Tag(t) if all_wasm_platforms.contains(t));
                     let (category, name) = if platform == Platform::Mobile {
                         if let Some(tag) = tag.as_ref() {
                             all_mobile_platforms.insert(tag.clone());
@@ -214,6 +228,14 @@ fn main() {
                             example = "Bevy Mobile Example".to_string();
                         }
                         (ExampleCategory("Mobile".to_string()), example)
+                    } else if is_wasm {
+                        let base = example.split('.').next().unwrap();
+                        let name = if let Some((_cat, name)) = base.split_once('/') {
+                            name.to_string()
+                        } else {
+                            base.to_string()
+                        };
+                        (ExampleCategory("Wasm".to_string()), name)
                     } else {
                         let mut split = example.split('.').next().unwrap().split('/');
                         (
@@ -327,5 +349,5 @@ fn main() {
 
     all_examples_cleaned.sort_by_key(|a| format!("{}/{}", a.category.0, a.name));
 
-    template::build_site(runs, all_examples_cleaned, all_mobile_platforms)
+    template::build_site(runs, all_examples_cleaned, all_mobile_platforms, all_wasm_platforms)
 }
