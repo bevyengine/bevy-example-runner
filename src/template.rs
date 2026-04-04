@@ -49,12 +49,49 @@ pub fn build_site(
     runs: Vec<Run>,
     all_examples: Vec<Example>,
     all_mobile_platforms: HashSet<String>,
+    all_wasm_platforms: HashSet<String>,
 ) {
     let runs: Vec<StringRun> = runs.into_iter().map(|r| r.into()).collect();
+
+    let mut all_wasm_platforms: Vec<String> = all_wasm_platforms.into_iter().collect();
+    all_wasm_platforms.sort_by(|a, b| {
+        fn sort_key(tag: &str) -> (u8, u8, u8) {
+            let tag_lower = tag.to_lowercase();
+            let api = if tag_lower.contains("webgpu") {
+                0
+            } else if tag_lower.contains("webgl2") {
+                1
+            } else {
+                2
+            };
+            let browser = if tag_lower.contains("chromium") {
+                0
+            } else if tag_lower.contains("firefox") {
+                1
+            } else if tag_lower.contains("webkit") {
+                2
+            } else {
+                3
+            };
+            let os = if tag_lower.starts_with("linux") {
+                0
+            } else if tag_lower.starts_with("macos") {
+                1
+            } else if tag_lower.starts_with("windows") {
+                2
+            } else {
+                3
+            };
+            (api, browser, os)
+        }
+        sort_key(a).cmp(&sort_key(b))
+    });
+
     let mut context = Context::new();
     context.insert("runs".to_string(), &runs);
     context.insert("all_examples".to_string(), &all_examples);
     context.insert("all_mobile_platforms".to_string(), &all_mobile_platforms);
+    context.insert("all_wasm_platforms".to_string(), &all_wasm_platforms);
 
     let mut tera = Tera::default();
     tera.add_raw_template(

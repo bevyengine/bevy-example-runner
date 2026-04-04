@@ -315,7 +315,41 @@
             {% endif -%}
             {% endfor -%}
             {% for example in all_examples -%}
-            {% if example.category != "Mobile" %}
+            {% if example.category == "Wasm" -%}
+            <tr {% if example.flaky -%}class="flaky" {% else -%}class="all-good" style="display: none;" {% endif -%}>
+                <td style="border-right: none;">{{ example.category }} / {{ example.name }}</td>
+                <td style="border-left: none;" class="text-center">
+                    {% for wasm in all_wasm_platforms -%}
+                    {{ icons::wasm_platform(tag=wasm) }}
+                    {% if not loop.last -%}
+                    <hr />
+                    {% endif -%}
+                    {% endfor -%}
+                </td>
+                {% for run in runs -%}
+                <td class="text-center">
+                    {% if run.results[example.name] -%}
+                    {% for wasm in all_wasm_platforms -%}
+                    {{ macros::status(example_name=example.name, platform=wasm, run=run) }}
+                    {% if not loop.last -%}
+                    <hr />
+                    {% endif -%}
+                    {% endfor -%}
+                    {% else -%}
+                    {% for wasm in all_wasm_platforms -%}
+                    -
+                    {% if not loop.last -%}
+                    <hr />
+                    {% endif -%}
+                    {% endfor -%}
+                    {% endif -%}
+                </td>
+                {% endfor -%}
+            </tr>
+            {% endif -%}
+            {% endfor -%}
+            {% for example in all_examples -%}
+            {% if example.category != "Mobile" and example.category != "Wasm" %}
             <tr {% if example.flaky -%}class="flaky" {% else -%}class="all-good" style="display: none;" {% endif -%}>
                 <td style="border-right: none;">{{ example.category }} / {{ example.name }}</td>
                 <td style="border-left: none;" class="text-center">

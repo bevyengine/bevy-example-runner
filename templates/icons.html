@@ -37,3 +37,24 @@
 {% macro android(class="") %}
 <i class="fa-brands fa-android {{ class }}"></i>
 {% endmacro %}
+
+{% macro firefox(class="") %}
+<i class="fa-brands fa-firefox-browser {{ class }}"></i>
+{% endmacro %}
+
+{% macro chrome(class="") %}
+<i class="fa-brands fa-chrome {{ class }}"></i>
+{% endmacro %}
+
+{% macro safari(class="") %}
+<i class="fa-brands fa-safari {{ class }}"></i>
+{% endmacro %}
+
+{% macro wasm_platform(tag) %}
+<span class="platform-tooltip">
+    {% if tag is starting_with("Linux") %}{{ self::linux() }}{% elif tag is starting_with("macOS") %}{{ self::macos() }}{% elif tag is starting_with("Windows") %}{{ self::windows() }}{% endif %}
+    {% if tag is containing("firefox") %}{{ self::firefox() }}{% elif tag is containing("chromium") %}{{ self::chrome() }}{% elif tag is containing("webkit") %}{{ self::safari() }}{% endif %}
+    {% if tag is containing("webgpu") %}<small>webgpu</small>{% elif tag is containing("webgl2") %}<small>webgl2</small>{% endif %}
+    <span class="tooltiptext">wasm {{ tag }}</span>
+</span>
+{% endmacro %}
