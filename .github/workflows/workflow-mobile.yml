@@ -320,7 +320,7 @@ jobs:
 
       - name: Trigger screenshots comparison
         run: |
-          ./pixeleagle-cli compare-run ${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }} --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-mobile.json
+          ./pixeleagle-cli --format json compare-run ${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }} --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-mobile.json
           cat pixeleagle-mobile.json
         env:
           PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}

@@ -162,8 +162,14 @@ jobs:
 
           cd .github/start-wasm-example
 
-          ../pixeleagle-cli upload-screenshots $run *.png
+          ../../pixeleagle-cli upload-screenshots $run *.png
 
-          ../pixeleagle-cli compare-run $run --same api --same browser --same host-os --filter branch:main
+          ../../pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
         env:
           PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
+
+      - name: Upload Pixel Eagle status
+        uses: actions/upload-artifact@v5
+        with:
+          name: pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}
+          path: pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
