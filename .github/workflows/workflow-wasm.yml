@@ -147,7 +147,7 @@ jobs:
           path: .github/start-wasm-example/screenshot-*.png
 
       - name: Install Pixel Eagle CLI
-        uses: vleue/PixelEagle-cli/install@main
+        uses: vleue/PixelEagle-cli/install@v0.2.0
 
       - name: Send to Pixel Eagle
         run: |
