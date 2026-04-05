@@ -269,8 +269,7 @@ jobs:
 
           pixeleagle-cli upload-screenshots $run */*.png
 
-          pixeleagle-cli --format json compare-run $run --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-${{ matrix.os }}.json
-          cat pixeleagle-${{ matrix.os }}.json
+          pixeleagle-cli --format json compare-run $run --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > ../pixeleagle-${{ matrix.os }}.json
 
           echo "created run $run"
         env:
