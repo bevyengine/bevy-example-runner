@@ -162,10 +162,7 @@ jobs:
 
           pixeleagle-cli upload-screenshots --clean-name $run *.png
 
-          pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details > tmp.json
-          cat tmp.json
-          cat tmp.json | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
-          cat pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+          pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > ../../pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
         env:
           PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
 
