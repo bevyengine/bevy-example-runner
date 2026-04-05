@@ -146,19 +146,12 @@ jobs:
           name: screenshots-wasm-${{ matrix.browser }}-${{ matrix.api }}-${{ runner.os }}
           path: .github/start-wasm-example/screenshot-*.png
 
+      - name: Install Pixel Eagle CLI
+        run: cargo install --git https://github.com/vleue/PixelEagle-cli
+
       - name: Send to Pixel Eagle
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            curl -sL -o pixeleagle-cli.zip https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-x86_64-pc-windows-msvc.zip
-            unzip pixeleagle-cli.zip
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            curl -sL https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-aarch64-apple-darwin.tar.gz | tar xz
-          else
-            curl -sL https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-x86_64-unknown-linux-gnu.tar.gz | tar xz
-          fi
-          chmod 755 pixeleagle-cli
-
-          run=`./pixeleagle-cli new-run --metadata '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}'`
+          run=`pixeleagle-cli new-run --metadata '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}'`
 
           cd .github/start-wasm-example
 
@@ -167,9 +160,9 @@ jobs:
             mv "$screenshot" "$name.png"
           done
 
-          ../../pixeleagle-cli upload-screenshots --clean-name $run *.png
+          pixeleagle-cli upload-screenshots --clean-name $run *.png
 
-          ../../pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details > tmp.json
+          pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details > tmp.json
           cat tmp.json
           cat tmp.json | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
           cat pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json

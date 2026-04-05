@@ -259,23 +259,15 @@ jobs:
       - name: Send to Pixel Eagle
         if: steps.gather-examples.outcome == 'success'
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            curl -sL -o pixeleagle-cli.zip https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-x86_64-pc-windows-msvc.zip
-            unzip pixeleagle-cli.zip
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            curl -sL https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-aarch64-apple-darwin.tar.gz | tar xz
-          else
-            curl -sL https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-x86_64-unknown-linux-gnu.tar.gz | tar xz
-          fi
-          chmod 755 pixeleagle-cli
+          cargo install --git https://github.com/vleue/PixelEagle-cli
 
-          run=`./pixeleagle-cli new-run --metadata '{"os":"${{ matrix.os }}", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}'`
+          run=`pixeleagle-cli new-run --metadata '{"os":"${{ matrix.os }}", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}'`
 
           cd screenshots-${{ matrix.os }}
 
-          ../pixeleagle-cli upload-screenshots $run */*.png
+          pixeleagle-cli upload-screenshots $run */*.png
 
-          ../pixeleagle-cli --format json compare-run $run --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-${{ matrix.os }}.json
+          pixeleagle-cli --format json compare-run $run --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-${{ matrix.os }}.json
           cat pixeleagle-${{ matrix.os }}.json
 
           echo "created run $run"
