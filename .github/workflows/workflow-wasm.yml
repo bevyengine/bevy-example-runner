@@ -162,7 +162,12 @@ jobs:
 
           cd .github/start-wasm-example
 
-          ../../pixeleagle-cli upload-screenshots $run *.png
+          for screenshot in screenshot-*-${{ matrix.browser }}.png; do
+            name=$(echo "$screenshot" | sed 's/screenshot-\(.*\)-${{ matrix.browser }}\.png/\1/')
+            mv "$screenshot" "$name.png"
+          done
+
+          ../../pixeleagle-cli upload-screenshots --clean-name $run *.png
 
           ../../pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
         env:
