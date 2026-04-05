@@ -256,11 +256,13 @@ jobs:
             rm -rf $screenshotfolder
           done
 
+      - name: Install Pixel Eagle CLI
+        if: steps.gather-examples.outcome == 'success'
+        uses: vleue/PixelEagle-cli@main
+
       - name: Send to Pixel Eagle
         if: steps.gather-examples.outcome == 'success'
         run: |
-          cargo install --git https://github.com/vleue/PixelEagle-cli
-
           run=`pixeleagle-cli new-run --metadata '{"os":"${{ matrix.os }}", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}'`
 
           cd screenshots-${{ matrix.os }}
