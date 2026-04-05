@@ -5,11 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       fork:
-        description: 'Fork to target'
+        description: "Fork to target"
         required: true
         type: string
       branch:
-        description: 'Branch to target'
+        description: "Branch to target"
         required: true
         type: string
 
@@ -24,7 +24,6 @@ jobs:
       per_page: ${{ env.PER_PAGE }}
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
-      pixeleagle_project: ${{ steps.env.outputs.pixeleagle_project }}
     steps:
       - name: Checkout Bevy main branch
         uses: actions/checkout@v6
@@ -36,7 +35,6 @@ jobs:
         run: |
           echo "gitref=`git rev-parse HEAD`" >> $GITHUB_OUTPUT
           echo "date=`date +%Y%m%d%H%M`" >> $GITHUB_OUTPUT
-          echo "pixeleagle_project=B25A040A-A980-4602-B90C-D480AB84076D" >> $GITHUB_OUTPUT
 
   native-run:
     name: Native
@@ -44,7 +42,6 @@ jobs:
     uses: ./.github/workflows/workflow-native.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "${{ inputs.fork }}:${{ inputs.branch }}"
       repository: ${{ inputs.fork }}
       per_page: "${{ needs.get-environment.outputs.per_page }}"
@@ -56,7 +53,6 @@ jobs:
     uses: ./.github/workflows/workflow-mobile.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "${{ inputs.fork }}:${{ inputs.branch }}"
       repository: ${{ inputs.fork }}
     secrets: inherit
@@ -67,7 +63,6 @@ jobs:
     uses: ./.github/workflows/workflow-wasm.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "${{ inputs.fork }}:${{ inputs.branch }}"
       repository: ${{ inputs.fork }}
     secrets: inherit

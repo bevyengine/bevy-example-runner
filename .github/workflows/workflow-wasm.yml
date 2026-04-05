@@ -9,9 +9,6 @@ on:
       gitref:
         required: true
         type: string
-      pixeleagle_project:
-        required: true
-        type: string
       branch:
         required: true
         type: string
@@ -27,11 +24,6 @@ on:
         type: string
         default: "main"
         description: "Git reference to use"
-      pixeleagle_project:
-        required: true
-        type: string
-        default: "B25A040A-A980-4602-B90C-D480AB84076D"
-        description: "Pixeleagle project ID"
       branch:
         required: true
         type: string
@@ -156,45 +148,22 @@ jobs:
 
       - name: Send to Pixel Eagle
         run: |
-          run=`curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs -H 'Content-Type: application/json' -d '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.id'`
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            curl -sL -o pixeleagle-cli.zip https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-x86_64-pc-windows-msvc.zip
+            unzip pixeleagle-cli.zip
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            curl -sL https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-aarch64-apple-darwin.tar.gz | tar xz
+          else
+            curl -sL https://github.com/vleue/PixelEagle-cli/releases/download/v0.1.0/pixeleagle-cli-x86_64-unknown-linux-gnu.tar.gz | tar xz
+          fi
+          chmod 755 pixeleagle-cli
 
-          SAVEIFS=$IFS
-
-          IFS=$'\n'
+          run=`./pixeleagle-cli new-run --metadata '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}'`
 
           cd .github/start-wasm-example
 
-          # Build a json array of screenshots and their hashes
-          hashes='[';
-          for screenshot in $(find . -type f -maxdepth 1 -name "*.png");
-          do
-            name=${screenshot:2}
-            name=`echo $name | sed 's/.*-\(.*\)-.*/\1/'`
-            echo $name
-            hash=`shasum -a 256 $screenshot | awk '{print $1}'`
-            hashes="$hashes [\"$name\",\"$hash\"],"
-          done
-          hashes=`echo $hashes | rev | cut -c 2- | rev`
-          hashes="$hashes]"
+          ../pixeleagle-cli upload-screenshots $run *.png
 
-          IFS=$SAVEIFS
-
-          # Upload screenshots with unknown hashes
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/hashes -H 'Content-Type: application/json' -d "$hashes" --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.[]|[.name] | @tsv' |
-            while IFS=$'\t' read -r name; do
-              name=`echo $name | tr -d '"'`
-              echo "Uploading $name"
-              curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/screenshots -F "data=@./screenshot-$name-${{ matrix.browser }}.png" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
-              echo
-            done
-
-          IFS=$SAVEIFS
-
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto -H 'Content-Type: application/json' -d '{"api":"<equal>", "browser":"<equal>", "host-os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > $GITHUB_WORKSPACE/pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
-          cat $GITHUB_WORKSPACE/pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
-
-      - name: Upload Pixel Eagle status
-        uses: actions/upload-artifact@v5
-        with:
-          name: pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}
-          path: pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+          ../pixeleagle-cli compare-run $run --same api --same browser --same host-os --filter branch:main
+        env:
+          PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}

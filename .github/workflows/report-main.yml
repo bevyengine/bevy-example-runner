@@ -12,7 +12,6 @@ jobs:
     outputs:
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
-      pixeleagle_project: ${{ steps.env.outputs.pixeleagle_project }}
       mobile_percy_project: ${{ steps.env.outputs.mobile_percy_project }}
       updated: ${{ steps.version-check.outputs.updated }}
     steps:
@@ -26,7 +25,6 @@ jobs:
         run: |
           echo "gitref=`git rev-parse HEAD`" >> $GITHUB_OUTPUT
           echo "date=`date +%Y%m%d%H%M`" >> $GITHUB_OUTPUT
-          echo "pixeleagle_project=B25A040A-A980-4602-B90C-D480AB84076D" >> $GITHUB_OUTPUT
           echo "mobile_percy_project=dede4209/Bevy-Mobile-Example" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v6
         with:
@@ -46,7 +44,6 @@ jobs:
     if: needs.get-environment.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -59,7 +56,6 @@ jobs:
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
       mobile_percy_project: ${{ needs.get-environment.outputs.mobile_percy_project }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -71,7 +67,6 @@ jobs:
     uses: ./.github/workflows/workflow-wasm.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
     secrets: inherit
