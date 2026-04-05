@@ -11,9 +11,6 @@ on:
         required: true
         type: string
         default: "main"
-      mobile_percy_project:
-        required: false
-        type: string
       branch:
         required: true
         type: string
@@ -29,10 +26,6 @@ on:
         type: string
         default: "main"
         description: "Commit or branch name to run on"
-      mobile_percy_project:
-        required: false
-        type: string
-        description: "Percy project to send results to"
       branch:
         required: true
         type: string
@@ -261,10 +254,6 @@ jobs:
               git apply --ignore-whitespace $($_.FullName)
           }
 
-      - name: Set Percy Token if needed
-        if: "${{ inputs.mobile_percy_project != '' }}"
-        run: echo "PERCY_TOKEN=${{ secrets.PERCY_TOKEN_MOBILE }}" >> $GITHUB_ENV
-
       - name: Run Example
         run: |
           cd .github/start-mobile-example
@@ -277,9 +266,6 @@ jobs:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           DEVICE: ${{ matrix.device }}
           OS_VERSION: ${{ matrix.os_version }}
-          PERCY_COMMIT: ${{ inputs.gitref }}
-          PERCY_PARALLEL_NONCE: ${{ github.run_id }}
-          PERCY_PARALLEL_TOTAL: ${{ strategy.job-total }}
 
       - name: Save screenshots
         if: ${{ always() }}
