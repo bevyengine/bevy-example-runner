@@ -9,4 +9,4 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
 clap = { version = "4.5.30", features = ["derive"] }
-pixeleagle-cli = { git = "https://github.com/vleue/PixelEagle-cli", features = ["blocking"], tag = "v0.2.0" }
+pixeleagle-cli = { git = "https://github.com/vleue/PixelEagle-cli", features = ["blocking"], tag = "v0.2.1" }
