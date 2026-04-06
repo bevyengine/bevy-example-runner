@@ -8,7 +8,7 @@ use std::{
     str::FromStr,
 };
 
-use crate::screenshot::{percy, pixeleagle, ScreenshotData, ScreenshotState};
+use crate::screenshot::{pixeleagle, ScreenshotData, ScreenshotState};
 
 mod screenshot;
 mod template;
@@ -91,7 +91,6 @@ enum Kind {
     Successes,
     Failures,
     NoScreenshots,
-    Percy,
     PixelEagle,
 }
 
@@ -103,7 +102,6 @@ impl FromStr for Kind {
             "successes" => Ok(Kind::Successes),
             "failures" => Ok(Kind::Failures),
             "no_screenshots" => Ok(Kind::NoScreenshots),
-            "percy" => Ok(Kind::Percy),
             "pixeleagle" => Ok(Kind::PixelEagle),
             _ => Err(s.to_string()),
         }
@@ -174,7 +172,9 @@ fn main() {
             } else {
                 let mut name = file_name_str.split('-');
                 let platform = Platform::from_str(name.next().unwrap()).unwrap();
-                let kind = Kind::from_str(name.next().unwrap()).unwrap();
+                let Ok(kind) = Kind::from_str(name.next().unwrap()) else {
+                    continue;
+                };
                 (platform, kind)
             };
 
@@ -200,11 +200,10 @@ fn main() {
                         .insert(platform.clone(), kind.clone());
                 });
             }
-            if [Kind::Percy, Kind::PixelEagle].contains(&kind) {
+            if kind == Kind::PixelEagle {
                 println!("  - {:?} / {:?}", kind, platform);
                 let content = fs::read_to_string(&path).unwrap();
                 let screenshots = match kind {
-                    Kind::Percy => continue, //percy::read_results(content),
                     Kind::PixelEagle => pixeleagle::read_results(content),
                     _ => unreachable!(),
                 };
@@ -217,7 +216,8 @@ fn main() {
                     snapshot_url,
                 } in screenshots.into_iter()
                 {
-                    let is_wasm = matches!(&platform, Platform::Tag(t) if all_wasm_platforms.contains(t));
+                    let is_wasm =
+                        matches!(&platform, Platform::Tag(t) if all_wasm_platforms.contains(t));
                     let (category, name) = if platform == Platform::Mobile {
                         if let Some(tag) = tag.as_ref() {
                             all_mobile_platforms.insert(tag.clone());
@@ -349,5 +349,10 @@ fn main() {
 
     all_examples_cleaned.sort_by_key(|a| format!("{}/{}", a.category.0, a.name));
 
-    template::build_site(runs, all_examples_cleaned, all_mobile_platforms, all_wasm_platforms)
+    template::build_site(
+        runs,
+        all_examples_cleaned,
+        all_mobile_platforms,
+        all_wasm_platforms,
+    )
 }

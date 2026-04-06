@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::{ImageUrl, SnapshotViewerUrl};
 
-pub mod percy;
 pub mod pixeleagle;
 
 #[derive(Debug)]

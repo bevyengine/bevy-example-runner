@@ -55,7 +55,6 @@ jobs:
       per_page: ${{ env.PER_PAGE }}
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
-      pixeleagle_project: ${{ steps.env.outputs.pixeleagle_project }}
     steps:
       - name: Checkout Bevy main branch
         uses: actions/checkout@v6
@@ -70,7 +69,6 @@ jobs:
         run: |
           echo "gitref=`git rev-parse HEAD`" >> $GITHUB_OUTPUT
           echo "date=`date +%Y%m%d%H%M`" >> $GITHUB_OUTPUT
-          echo "pixeleagle_project=B25A040A-A980-4602-B90C-D480AB84076D" >> $GITHUB_OUTPUT
 
   native-run:
     name: Native
@@ -78,7 +76,6 @@ jobs:
     uses: ./.github/workflows/workflow-native.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "PR-${{ github.event.issue.title }}"
       repository: "bevyengine/bevy"
       per_page: "${{ needs.get-environment.outputs.per_page }}"
@@ -90,7 +87,6 @@ jobs:
     uses: ./.github/workflows/workflow-mobile.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "PR-${{ github.event.issue.title }}"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -101,7 +97,6 @@ jobs:
     uses: ./.github/workflows/workflow-wasm.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "PR-${{ github.event.issue.title }}"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -115,7 +110,7 @@ jobs:
       - name: Comment with link to Pixel Eagle
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
-          COMMENT_BODY="All done! Check the results at: https://pixel-eagle.com/project/${{ needs.get-environment.outputs.pixeleagle_project }}?filter=PR-${{ github.event.issue.title }}"
+          COMMENT_BODY="All done! Check the results at: https://pixel-eagle.com/project/B25A040A-A980-4602-B90C-D480AB84076D?filter=PR-${{ github.event.issue.title }}"
           gh issue comment $ISSUE_NUMBER --body "$COMMENT_BODY"
           gh issue close $ISSUE_NUMBER --reason completed
         env:

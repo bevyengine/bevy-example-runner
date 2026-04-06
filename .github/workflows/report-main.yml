@@ -12,8 +12,6 @@ jobs:
     outputs:
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
-      pixeleagle_project: ${{ steps.env.outputs.pixeleagle_project }}
-      mobile_percy_project: ${{ steps.env.outputs.mobile_percy_project }}
       updated: ${{ steps.version-check.outputs.updated }}
     steps:
       - name: Checkout Bevy main branch
@@ -26,8 +24,6 @@ jobs:
         run: |
           echo "gitref=`git rev-parse HEAD`" >> $GITHUB_OUTPUT
           echo "date=`date +%Y%m%d%H%M`" >> $GITHUB_OUTPUT
-          echo "pixeleagle_project=B25A040A-A980-4602-B90C-D480AB84076D" >> $GITHUB_OUTPUT
-          echo "mobile_percy_project=dede4209/Bevy-Mobile-Example" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v6
         with:
           ref: "results"
@@ -46,7 +42,6 @@ jobs:
     if: needs.get-environment.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -58,8 +53,6 @@ jobs:
     uses: ./.github/workflows/workflow-mobile.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      mobile_percy_project: ${{ needs.get-environment.outputs.mobile_percy_project }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -71,7 +64,6 @@ jobs:
     uses: ./.github/workflows/workflow-wasm.yml
     with:
       gitref: ${{ needs.get-environment.outputs.gitref }}
-      pixeleagle_project: ${{ needs.get-environment.outputs.pixeleagle_project }}
       branch: "main"
       repository: "bevyengine/bevy"
     secrets: inherit
@@ -132,10 +124,6 @@ jobs:
           grep . Windows-successes-concat > results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/Windows-successes || true
           grep . Windows-failures-concat > results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/Windows-failures || true
           grep . Windows-no_screenshots-concat > results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/Windows-no_screenshots || true
-
-      - name: Save Percy results
-        run: |
-          curl 'https://percy.io/api/v1/builds?filter\[sha\]=${{ needs.get-environment.outputs.gitref }}' -H 'Authorization: Token token=${{ secrets.PERCY_TOKEN_MOBILE }}' | jq '.data[0].attributes' > results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/mobile-percy
 
       - name: Download all Pixel Eagle artifacts
         uses: actions/download-artifact@v6

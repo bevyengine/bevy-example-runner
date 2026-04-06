@@ -9,9 +9,6 @@ on:
       gitref:
         required: true
         type: string
-      pixeleagle_project:
-        required: true
-        type: string
       branch:
         required: true
         type: string
@@ -27,11 +24,6 @@ on:
         type: string
         default: "main"
         description: "Git reference to use"
-      pixeleagle_project:
-        required: true
-        type: string
-        default: "B25A040A-A980-4602-B90C-D480AB84076D"
-        description: "Pixeleagle project ID"
       branch:
         required: true
         type: string
@@ -154,44 +146,25 @@ jobs:
           name: screenshots-wasm-${{ matrix.browser }}-${{ matrix.api }}-${{ runner.os }}
           path: .github/start-wasm-example/screenshot-*.png
 
+      - name: Install Pixel Eagle CLI
+        uses: vleue/PixelEagle-cli/install@1eeb51dcd4531350912a1d4542eb687589d212e2 # v0.2.1
+
       - name: Send to Pixel Eagle
         run: |
-          run=`curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs -H 'Content-Type: application/json' -d '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.id'`
-
-          SAVEIFS=$IFS
-
-          IFS=$'\n'
+          run=`pixeleagle-cli new-run --metadata '{"api":"${{ matrix.api }}", "browser": "${{ matrix.browser }}", "os":"wasm", "gitref": "${{ inputs.gitref }}", "host-os": "${{ runner.os }}", "branch": "${{ inputs.branch }}"}'`
 
           cd .github/start-wasm-example
 
-          # Build a json array of screenshots and their hashes
-          hashes='[';
-          for screenshot in $(find . -type f -maxdepth 1 -name "*.png");
-          do
-            name=${screenshot:2}
-            name=`echo $name | sed 's/.*-\(.*\)-.*/\1/'`
-            echo $name
-            hash=`shasum -a 256 $screenshot | awk '{print $1}'`
-            hashes="$hashes [\"$name\",\"$hash\"],"
+          for screenshot in screenshot-*-${{ matrix.browser }}.png; do
+            name=$(echo "$screenshot" | sed 's/screenshot-\(.*\)-${{ matrix.browser }}\.png/\1/')
+            mv "$screenshot" "$name.png"
           done
-          hashes=`echo $hashes | rev | cut -c 2- | rev`
-          hashes="$hashes]"
 
-          IFS=$SAVEIFS
+          pixeleagle-cli upload-screenshots --clean-name $run *.png
 
-          # Upload screenshots with unknown hashes
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/hashes -H 'Content-Type: application/json' -d "$hashes" --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.[]|[.name] | @tsv' |
-            while IFS=$'\t' read -r name; do
-              name=`echo $name | tr -d '"'`
-              echo "Uploading $name"
-              curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/screenshots -F "data=@./screenshot-$name-${{ matrix.browser }}.png" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
-              echo
-            done
-
-          IFS=$SAVEIFS
-
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/$run/compare/auto -H 'Content-Type: application/json' -d '{"api":"<equal>", "browser":"<equal>", "host-os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > $GITHUB_WORKSPACE/pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
-          cat $GITHUB_WORKSPACE/pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+          pixeleagle-cli --format json compare-run $run --same api --same browser --same host-os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > ../../pixeleagle-wasm-${{ runner.os }}-${{ matrix.browser }}-${{ matrix.api }}.json
+        env:
+          PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
 
       - name: Upload Pixel Eagle status
         uses: actions/upload-artifact@v5

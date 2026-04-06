@@ -11,12 +11,6 @@ on:
         required: true
         type: string
         default: "main"
-      mobile_percy_project:
-        required: false
-        type: string
-      pixeleagle_project:
-        required: true
-        type: string
       branch:
         required: true
         type: string
@@ -32,15 +26,6 @@ on:
         type: string
         default: "main"
         description: "Commit or branch name to run on"
-      mobile_percy_project:
-        required: false
-        type: string
-        description: "Percy project to send results to"
-      pixeleagle_project:
-        required: true
-        type: string
-        default: "B25A040A-A980-4602-B90C-D480AB84076D"
-        description: "Pixel Eagle project to send results to"
       branch:
         required: true
         type: string
@@ -52,11 +37,16 @@ jobs:
     outputs:
       pixeleagle_run: ${{ steps.run.outputs.pixeleagle_run }}
     steps:
+      - name: Install Pixel Eagle CLI
+        uses: vleue/PixelEagle-cli/install@1eeb51dcd4531350912a1d4542eb687589d212e2 # v0.2.1
+
       - name: Create Run
         id: run
         run: |
-          run=`curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs -H 'Content-Type: application/json' -d '{"os":"mobile", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '.id'`
+          run=`pixeleagle-cli new-run --metadata '{"os":"mobile", "gitref": "${{ inputs.gitref }}", "branch": "${{ inputs.branch }}"}'`
           echo "pixeleagle_run=$run" >> $GITHUB_OUTPUT
+        env:
+          PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
 
   build-for-iOS:
     runs-on: macos-latest
@@ -264,10 +254,6 @@ jobs:
               git apply --ignore-whitespace $($_.FullName)
           }
 
-      - name: Set Percy Token if needed
-        if: "${{ inputs.mobile_percy_project != '' }}"
-        run: echo "PERCY_TOKEN=${{ secrets.PERCY_TOKEN_MOBILE }}" >> $GITHUB_ENV
-
       - name: Run Example
         run: |
           cd .github/start-mobile-example
@@ -280,9 +266,6 @@ jobs:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           DEVICE: ${{ matrix.device }}
           OS_VERSION: ${{ matrix.os_version }}
-          PERCY_COMMIT: ${{ inputs.gitref }}
-          PERCY_PARALLEL_NONCE: ${{ github.run_id }}
-          PERCY_PARALLEL_TOTAL: ${{ strategy.job-total }}
 
       - name: Save screenshots
         if: ${{ always() }}
@@ -291,6 +274,9 @@ jobs:
           name: screenshots-${{ matrix.device }}-${{ matrix.os_version }}
           path: .github/start-mobile-example/*.png
 
+      - name: Install Pixel Eagle CLI
+        uses: vleue/PixelEagle-cli/install@1eeb51dcd4531350912a1d4542eb687589d212e2 # v0.2.1
+
       - name: Send to Pixel Eagle
         run: |
           cd .github/start-mobile-example
@@ -298,9 +284,12 @@ jobs:
           do
             file=${screenshot:2}
             name="${{ matrix.os }}-${{ matrix.device }}-${{ matrix.os_version }}-$file"
-            echo $name
-            curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }}/screenshots -F "data=@./$file" -F "screenshot=$name" --oauth2-bearer ${{ secrets.PIXELEAGLE }}
+            mv "$file" "$name"
           done
+
+          pixeleagle-cli upload-screenshots ${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }} *.png
+        env:
+          PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
 
   mobile-check-result-pixel-eagle:
     runs-on: ubuntu-latest
@@ -308,10 +297,15 @@ jobs:
     needs: [take-screenshots, create-pixel-eagle-run]
     if: always()
     steps:
+      - name: Install Pixel Eagle CLI
+        uses: vleue/PixelEagle-cli/install@1eeb51dcd4531350912a1d4542eb687589d212e2 # v0.2.1
+
       - name: Trigger screenshots comparison
         run: |
-          curl https://pixel-eagle.com/${{ inputs.pixeleagle_project }}/runs/${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }}/compare/auto -H 'Content-Type: application/json' -d '{"os":"<equal>", "branch": "main"}' --oauth2-bearer ${{ secrets.PIXELEAGLE }} | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-mobile.json
+          pixeleagle-cli --format json compare-run ${{ needs.create-pixel-eagle-run.outputs.pixeleagle_run }} --same os --filter branch:main --print-details | jq '{project_id: .project_id, from: .from, to: .to}' > pixeleagle-mobile.json
           cat pixeleagle-mobile.json
+        env:
+          PIXEL_EAGLE_TOKEN: ${{ secrets.PIXELEAGLE }}
 
       - name: Upload Pixel Eagle status
         uses: actions/upload-artifact@v5
