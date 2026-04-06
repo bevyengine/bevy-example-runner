@@ -38,7 +38,7 @@ jobs:
       pixeleagle_run: ${{ steps.run.outputs.pixeleagle_run }}
     steps:
       - name: Install Pixel Eagle CLI
-        uses: vleue/PixelEagle-cli/install@v0.2.0
+        uses: vleue/PixelEagle-cli/install@v0.2.1
 
       - name: Create Run
         id: run
@@ -275,7 +275,7 @@ jobs:
           path: .github/start-mobile-example/*.png
 
       - name: Install Pixel Eagle CLI
-        uses: vleue/PixelEagle-cli/install@v0.2.0
+        uses: vleue/PixelEagle-cli/install@v0.2.1
 
       - name: Send to Pixel Eagle
         run: |
@@ -298,7 +298,7 @@ jobs:
     if: always()
     steps:
       - name: Install Pixel Eagle CLI
-        uses: vleue/PixelEagle-cli/install@v0.2.0
+        uses: vleue/PixelEagle-cli/install@v0.2.1
 
       - name: Trigger screenshots comparison
         run: |
