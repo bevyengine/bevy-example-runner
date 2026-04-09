@@ -258,7 +258,7 @@ jobs:
 
       - name: Install Pixel Eagle CLI
         if: steps.gather-examples.outcome == 'success'
-        uses: vleue/PixelEagle-cli/install@1eeb51dcd4531350912a1d4542eb687589d212e2 # v0.2.1
+        uses: vleue/PixelEagle-cli/install@e923dbc7f066baeda25269559487e61b5e81cca1 # v0.3.0
 
       - name: Send to Pixel Eagle
         if: steps.gather-examples.outcome == 'success'
