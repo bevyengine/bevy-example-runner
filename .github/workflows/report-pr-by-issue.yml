@@ -6,9 +6,6 @@ on:
     types:
       - opened
 
-env:
-  PER_PAGE: 10
-
 permissions:
   issues: write
 
@@ -52,7 +49,6 @@ jobs:
     if: needs.validate.outputs.is_issue_trigger == 'true'
     runs-on: ubuntu-latest
     outputs:
-      per_page: ${{ env.PER_PAGE }}
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
     steps:
@@ -78,7 +74,6 @@ jobs:
       gitref: ${{ needs.get-environment.outputs.gitref }}
       branch: "PR-${{ github.event.issue.title }}"
       repository: "bevyengine/bevy"
-      per_page: "${{ needs.get-environment.outputs.per_page }}"
     secrets: inherit
 
   mobile-run:

@@ -9,15 +9,11 @@ on:
         required: true
         type: string
 
-env:
-  PER_PAGE: 10
-
 jobs:
   get-environment:
     name: Get Environment
     runs-on: ubuntu-latest
     outputs:
-      per_page: ${{ env.PER_PAGE }}
       gitref: ${{ steps.env.outputs.gitref }}
       date: ${{ steps.env.outputs.date }}
     steps:
@@ -43,7 +39,6 @@ jobs:
       gitref: ${{ needs.get-environment.outputs.gitref }}
       branch: "PR-${{ inputs.pr }}"
       repository: "bevyengine/bevy"
-      per_page: "${{ needs.get-environment.outputs.per_page }}"
     secrets: inherit
 
   mobile-run:
