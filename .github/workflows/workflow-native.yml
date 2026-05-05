@@ -126,22 +126,39 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -yq \
             libasound2-dev libudev-dev libxkbcommon-x11-0 libwayland-dev fontconfig libfontconfig1-dev;
 
+      - uses: actions/cache/restore@v5
+        if: runner.os == 'linux'
+        id: apt-cache
+        continue-on-error: true
+        with:
+          path: |
+            ~/apt-cache/
+          key: ${{ runner.os }}-apt-
+          restore-keys: ${{ runner.os }}-apt-
+
       - name: (Linux) install xvfb, llvmpipe and lavapipe
         if: runner.os == 'linux'
         run: |
-          sudo apt-get update -y -qq
-          sudo add-apt-repository ppa:kisak/turtle -y || FAILED=true
-          # retry as it sometimes timeout
-          if [ $FAILED ]; then
-            sleep 5
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -yq \
+            xvfb libxcb-xfixes0-dev
+          if [ -d ~/apt-cache ] && [ -n "$(ls -A ~/apt-cache 2>/dev/null)" ]; then
+            sudo cp --verbose --force --recursive ~/apt-cache/* /
+          else
+            sudo apt-get update -y -qq
             sudo add-apt-repository ppa:kisak/turtle -y || FAILED=true
+            # retry as it sometimes timeout
             if [ $FAILED ]; then
-                  sleep 5
-                  sudo add-apt-repository ppa:kisak/turtle -y
+              sleep 5
+              sudo add-apt-repository ppa:kisak/turtle -y || FAILED=true
+              if [ $FAILED ]; then
+                    sleep 5
+                    sudo add-apt-repository ppa:kisak/turtle -y
+              fi
             fi
+            sudo apt-get update
+            DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -yq \
+              libgl1-mesa-dri mesa-vulkan-drivers
           fi
-          sudo apt-get update
-          sudo apt install -y xvfb libgl1-mesa-dri libxcb-xfixes0-dev mesa-vulkan-drivers
 
       - name: (Windows) Install DXC
         if: runner.os == 'windows'
