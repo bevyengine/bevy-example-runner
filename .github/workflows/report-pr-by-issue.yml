@@ -53,7 +53,7 @@ jobs:
       date: ${{ steps.env.outputs.date }}
     steps:
       - name: Checkout Bevy main branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: "bevyengine/bevy"
       - name: Switch to PR
