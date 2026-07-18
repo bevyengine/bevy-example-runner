@@ -1,8 +1,8 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index 9592d2d1e..19799ba48 100644
+index 950eb21b8..2ac8bc74f 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -4800,54 +4800,6 @@ description = "Demonstrates volumetric fog and lighting"
+@@ -4947,54 +4947,6 @@ description = "Demonstrates volumetric fog and lighting"
  category = "3D Rendering"
  wasm = true
  
@@ -34,7 +34,7 @@ index 9592d2d1e..19799ba48 100644
 -name = "app_under_test"
 -path = "examples/remote/app_under_test.rs"
 -doc-scrape-examples = true
--required-features = ["bevy_remote"]
+-required-features = ["bevy_remote", "bevy_feathers"]
 -
 -[package.metadata.example.app_under_test]
 -name = "App Under Test"
@@ -46,7 +46,7 @@ index 9592d2d1e..19799ba48 100644
 -name = "integration_test"
 -path = "examples/remote/integration_test.rs"
 -doc-scrape-examples = true
--required-features = ["bevy_remote"]
+-required-features = ["bevy_remote", "bevy_feathers"]
 -
 -[package.metadata.example.integration_test]
 -name = "Integration Test"
