@@ -110,6 +110,16 @@ jobs:
               git apply --ignore-whitespace $($_.FullName)
           }
 
+      - name: (macOS) Apply patches
+        if: runner.os == 'macOS'
+        shell: pwsh
+        run: |
+          Get-ChildItem "runner-patches/patches-macos" -Filter *.patch |
+          Foreach-Object {
+              Write-Output "Processing $($_.FullName)"
+              git apply --ignore-whitespace $($_.FullName)
+          }
+
       # - name: Setup Sentry Reporting
       #   shell: pwsh
       #   run: |
