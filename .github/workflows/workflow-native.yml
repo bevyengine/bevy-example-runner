@@ -72,6 +72,7 @@ jobs:
     name: Take Screenshots
     needs: [split-pages]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 180
     env:
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     strategy:
@@ -258,6 +259,7 @@ jobs:
     name: Send screenshots to Pixel Eagle
     runs-on: ubuntu-latest
     needs: [take-screenshots]
+    if: always()
     strategy:
       fail-fast: false
       matrix:

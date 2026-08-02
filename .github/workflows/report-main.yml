@@ -132,14 +132,22 @@ jobs:
 
       - name: Save Pixel Eagle results
         run: |
-          mv pixeleagle-Linux/pixeleagle-Linux.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/Linux-pixeleagle
-          mv pixeleagle-macOS/pixeleagle-macOS.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/macOS-pixeleagle
-          mv pixeleagle-Windows/pixeleagle-Windows.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/Windows-pixeleagle
-          mv pixeleagle-mobile/pixeleagle-mobile.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/mobile-pixeleagle
+          target=results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}
+
+          for platform in Linux macOS Windows mobile
+          do
+            if [ -f pixeleagle-$platform/pixeleagle-$platform.json ]; then
+              mv pixeleagle-$platform/pixeleagle-$platform.json $target/$platform-pixeleagle
+            else
+              echo "::warning title=Missing Pixel Eagle results::no results for $platform"
+            fi
+          done
+
           for wasm_report in pixeleagle-wasm-*
           do
+            [ -d "$wasm_report" ] || continue
             name=${wasm_report#pixeleagle-}
-            mv $wasm_report/*.json results/${{ needs.get-environment.outputs.date }}-${{ needs.get-environment.outputs.gitref }}/$name-pixeleagle
+            mv $wasm_report/*.json $target/$name-pixeleagle
           done
 
       - name: Store results in git
