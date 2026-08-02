@@ -137,7 +137,7 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -yq \
             libasound2-dev libudev-dev libxkbcommon-x11-0 libwayland-dev fontconfig libfontconfig1-dev;
 
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@v6
         if: runner.os == 'linux'
         id: apt-cache
         continue-on-error: true
@@ -183,7 +183,7 @@ jobs:
 
           cp dxc/* .
 
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@v6
         id: restore-cache
         continue-on-error: true
         with:
