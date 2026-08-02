@@ -120,7 +120,7 @@ jobs:
           # start a webserver
           python3 -m http.server --directory examples/wasm &
 
-          cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
+          cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --features bevy_feathers --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
 
       - name: Run examples (linux)
         if: runner.os == 'linux'
@@ -129,7 +129,7 @@ jobs:
           # start a webserver
           python3 -m http.server --directory examples/wasm &
 
-          xvfb-run cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
+          xvfb-run cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --features bevy_feathers --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
 
       - name: Run examples (macos)
         if: runner.os == 'macos'
@@ -138,7 +138,7 @@ jobs:
           # start a webserver
           python3 -m http.server --directory examples/wasm &
 
-          cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
+          cargo run -p build-wasm-example -- --browsers ${{ matrix.browser }} --api ${{ matrix.api }} --frames 25 --features bevy_feathers --test 2d_shapes testbed_ui bloom_2d atmospheric_fog pbr split_screen
 
       - name: Save screenshots
         uses: actions/upload-artifact@v5
