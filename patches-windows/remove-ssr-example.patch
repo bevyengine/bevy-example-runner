@@ -10,7 +10,7 @@ index 27470ce17..0c8126587 100644
 -name = "ssr"
 -path = "examples/3d/ssr.rs"
 -doc-scrape-examples = true
--required-features = ["bluenoise_texture"]
+-required-features = ["bluenoise_texture", "bevy_feathers"]
 -
 -[package.metadata.example.ssr]
 -name = "Screen Space Reflections"

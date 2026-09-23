@@ -46,7 +46,7 @@ index 950eb21b8..2ac8bc74f 100644
 -name = "integration_test"
 -path = "examples/remote/integration_test.rs"
 -doc-scrape-examples = true
--required-features = ["bevy_remote", "bevy_feathers"]
+-required-features = ["bevy_remote_client", "bevy_feathers"]
 -
 -[package.metadata.example.integration_test]
 -name = "Integration Test"
