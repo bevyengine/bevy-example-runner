@@ -21,7 +21,7 @@ on:
       platforms:
         required: false
         type: string
-        default: '["windows-2025", "macos-14", "ubuntu-24.04"]'
+        default: '["windows-2025", "macos-26", "ubuntu-24.04"]'
   workflow_dispatch:
     inputs:
       repository:
@@ -46,7 +46,7 @@ on:
       platforms:
         required: false
         type: string
-        default: '["windows-2025", "macos-14", "ubuntu-24.04"]'
+        default: '["windows-2025", "macos-26", "ubuntu-24.04"]'
         description: "List of platforms to run the examples on"
 
 jobs:
