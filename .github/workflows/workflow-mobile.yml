@@ -276,6 +276,11 @@ jobs:
       - name: Install deps
         run: |
           cd .github/start-mobile-example
+          # wdio 9.33.x workers crash at startup (`write EINVAL` from the xvfb wrapper)
+          npm pkg set \
+            devDependencies.@wdio/cli=9.32.0 \
+            devDependencies.@wdio/local-runner=9.32.0 \
+            devDependencies.@wdio/mocha-framework=9.32.0
           npm install
           npm install -g @percy/cli@latest
 
