@@ -1,0 +1,35 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 383c67975e..f7433ccc93 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -5369,30 +5369,6 @@ description = "Demonstration of automatic directional navigation between UI elem
+ category = "UI (User Interface)"
+ wasm = true
+ 
+-[[example]]
+-name = "clustered_decals"
+-path = "examples/3d/clustered_decals.rs"
+-doc-scrape-examples = true
+-required-features = ["pbr_clustered_decals", "bevy_feathers"]
+-
+-[package.metadata.example.clustered_decals]
+-name = "Clustered Decals"
+-description = "Demonstrates clustered decals"
+-category = "3D Rendering"
+-wasm = false
+-
+-[[example]]
+-name = "light_textures"
+-path = "examples/3d/light_textures.rs"
+-doc-scrape-examples = true
+-required-features = ["pbr_light_textures", "bevy_feathers"]
+-
+-[package.metadata.example.light_textures]
+-name = "Light Textures"
+-description = "Demonstrates light textures"
+-category = "3D Rendering"
+-wasm = false
+-
+ [[example]]
+ name = "occlusion_culling"
+ path = "examples/3d/occlusion_culling.rs"
