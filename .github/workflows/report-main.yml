@@ -15,7 +15,7 @@ jobs:
       updated: ${{ steps.version-check.outputs.updated }}
     steps:
       - name: Checkout Bevy main branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: "bevyengine/bevy"
           ref: "main"
@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "gitref=`git rev-parse HEAD`" >> $GITHUB_OUTPUT
           echo "date=`date +%Y%m%d%H%M`" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: "results"
           path: "results"
@@ -76,7 +76,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: "results"
           path: "results"
